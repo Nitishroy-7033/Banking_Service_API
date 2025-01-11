@@ -1,0 +1,217 @@
+## User
+`{
+    "userId": "UUID",                     
+    "firstName": "String",                
+    "lastName": "String",                 
+    "email": "String",                    
+    "phoneNumber": "String",              
+    "passwordHash": "String",             
+    "accounts": [],
+    "cards": [],
+    "isVerified": "Boolean",              
+    "verificationDate": "DateTime",       
+    "createdAt": "DateTime",              
+    "updatedAt": "DateTime"               
+}`
+`{
+    "userId": "UUID",              
+    "firstName": "String",         
+    "lastName": "String",          
+    "email": "String",             
+    "phoneNumber": "String",       
+    "address": {                   
+      "street": "String",
+      "city": "String",
+      "state": "String",
+      "postalCode": "String",
+      "country": "String"
+    },
+    "dateOfBirth": "DateTime",     
+    "profilePicture": "String",    
+    "preferences": {               
+      "language": "String",
+      "currency": "String"
+    },
+    "createdAt": "DateTime",       
+    "updatedAt": "DateTime"        
+  }
+  `
+## Account 
+`{
+    "accountId": "a1b2c3d4-5678-9101-1121-314151617181",
+    "userId": "u1b2c3d4-5678-9101-1121-314151617181",
+    "accountType": "SAVING",
+    "accountName": "Emergency Fund",
+    "balance": 8000.50,
+    "currency": "USD",
+    "interestRate": 2.5,
+    "overdraftLimit": null,
+    "accountStatus": "ACTIVE",
+    "blockedReason": null,
+    "blockedAt": null,
+    "lastTransactionDate": "2025-01-10T15:45:00Z",
+    "minimumBalance": 500.00,
+    "rewardPoints": 120,
+    "createdAt": "2024-12-01T10:00:00Z",
+    "updatedAt": "2025-01-10T15:45:00Z",
+    "closedAt": null
+}`
+
+## Card
+`{
+    "cardId": "UUID",                     
+    "accountId": "UUID",                  
+    "userId": "UUID",                     
+    "cardType": "Enum['CREDIT', 'DEBIT']",
+    "cardNumber": "String",               
+    "expiryDate": "Date",                 
+    "CVV": "String",                      
+    "pinHash": "String",                  
+    "cardStatus": "Enum['ACTIVE', 'BLOCKED', 'EXPIRED', 'LOST']", 
+    "issuedAt": "DateTime",               
+    "blockedAt": "DateTime",              
+    "blockedReason": "String",            
+    "activationDate": "DateTime",         
+    "lastUsedDate": "DateTime",           
+    "linkedServices": [                   
+    ],
+    "creditLimit": "Number",              
+    "currentOutstanding": "Number",       
+    "rewardPoints": "Number",             
+    "transactions": [],
+    "createdAt": "DateTime",              
+    "updatedAt": "DateTime"               
+  }`
+
+  ## Transactions
+  `{
+    "transactionId": "UUID",                   
+    "accountId": "UUID",                       
+    "userId": "UUID",                          
+    "cardId": "UUID",                          
+    "transactionType": "Enum['DEPOSIT', 'WITHDRAWAL', 'TRANSFER', 'PURCHASE', 'REFUND']", 
+    "transactionMode": "Enum['CASH', 'UPI', 'CARD', 'INTERNET_BANKING', 'PHONE_BANKING']", 
+    "amount": "Number",                        
+    "currency": "String",                      
+    "transactionDate": "DateTime",             
+    "status": "Enum['PENDING', 'SUCCESS', 'FAILED', 'CANCELLED']", 
+    "merchant": {                              
+      "merchantId": "String",                  
+      "merchantName": "String",                
+      "merchantCategory": "String"            
+    },
+    "receiverAccountId": "UUID",               
+    "transactionFee": "Number",                
+    "description": "String",                   
+    "rewardPointsEarned": "Number",            
+    "linkedServices": [                        
+      {
+        "serviceType": "Enum['UPI', 'PHONE_BANKING']",
+        "serviceId": "UUID"
+      }
+    ],
+    "createdAt": "DateTime",                   
+    "updatedAt": "DateTime"                    
+  }`
+  
+
+  ## Bill
+  `{
+    "billId": "UUID",                     
+    "userId": "UUID",                     
+    "accountId": "UUID",                  
+    "cardId": "UUID",                     
+    "billType": "Enum['UTILITY', 'LOAN', 'CREDIT_CARD', 'SUBSCRIPTION', 'INSURANCE']", 
+    "biller": {                           
+      "billerId": "String",               
+      "billerName": "String",             
+      "billerCategory": "String"          
+    },
+    "amount": "Number",                   
+    "currency": "String",                 
+    "dueDate": "DateTime",                
+    "paymentStatus": "Enum['PENDING', 'PAID', 'FAILED', 'OVERDUE']", 
+    "autoPay": {                          
+      "enabled": "Boolean",               
+      "linkedAccountId": "UUID",          
+      "linkedCardId": "UUID"              
+    },
+    "recurring": {                        
+      "isRecurring": "Boolean",           
+      "frequency": "Enum['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY']", 
+      "nextDueDate": "DateTime"           
+    },
+    "notifications": {                    
+      "reminderBeforeDays": "Number",     
+      "emailNotification": "Boolean",     
+      "smsNotification": "Boolean"        
+    },
+    "description": "String",              
+    "createdAt": "DateTime",              
+    "updatedAt": "DateTime"               
+  }`
+
+## UPI
+`{
+    "upiId": "UUID",                        
+    "userId": "UUID",                       
+    "accountId": "UUID",                    
+    "upiAddress": "String",                 
+    "upiStatus": "Enum['ACTIVE', 'BLOCKED', 'INACTIVE']", 
+    "linkedMobile": "String",               
+    "linkedBank": {                         
+      "bankName": "String",                 
+      "accountNumber": "String",            
+      "ifscCode": "String"                 
+    },
+    "createdAt": "DateTime",                
+    "updatedAt": "DateTime",                
+    "blockedAt": "DateTime",                
+    "blockReason": "String",                
+    "lastUsedAt": "DateTime",               
+    "transactionHistory": [                 
+      {
+        "transactionId": "UUID",            
+        "amount": "Number",                 
+        "currency": "String",               
+        "transactionDate": "DateTime",      
+        "status": "Enum['SUCCESS', 'FAILED', 'PENDING']", 
+        "merchant": {                       
+          "merchantName": "String",         
+          "merchantId": "String"            
+        },
+        "type": "Enum['PAYMENT', 'REQUEST']", 
+        "description": "String"             
+      }
+    ]
+  }`
+  
+## Notification
+`
+{
+    "notificationId": "UUID",      
+    "userId": "UUID",              
+    "notificationType": "Enum['TRANSACTION', 'BILL_REMINDER', 'PROMOTIONAL', 'ALERT']", 
+    "message": "String",           
+    "status": "Enum['SENT', 'READ', 'FAILED']", 
+    "sentAt": "DateTime",          
+    "receivedAt": "DateTime",      
+    "channel": "Enum['SMS', 'EMAIL', 'PUSH']", 
+    "createdAt": "DateTime"        
+  }
+  `
+
+## Reward
+`{
+    "rewardId": "UUID",             
+    "userId": "UUID",               
+    "pointsEarned": "Number",       
+    "transactionId": "UUID",        
+    "expiryDate": "DateTime",       
+    "redeemedPoints": "Number",     
+    "balancePoints": "Number",      
+    "rewardCategory": "String",     
+    "createdAt": "DateTime",        
+    "updatedAt": "DateTime"         
+  }
+  `
