@@ -1,24 +1,13 @@
 ## User
 `{
-    "userId": "UUID",                     
-    "firstName": "String",                
-    "lastName": "String",                 
-    "email": "String",                    
-    "phoneNumber": "String",              
-    "passwordHash": "String",             
-    "accounts": [],
-    "cards": [],
-    "isVerified": "Boolean",              
-    "verificationDate": "DateTime",       
-    "createdAt": "DateTime",              
-    "updatedAt": "DateTime"               
-}`
-`{
     "userId": "UUID",              
     "firstName": "String",         
     "lastName": "String",          
     "email": "String",             
-    "phoneNumber": "String",       
+    "phoneNumber": "String",  
+    "passwordHash": "String",   
+    "isVerified": "Boolean",   
+    "verificationDate": "DateTime", 
     "address": {                   
       "street": "String",
       "city": "String",
@@ -28,9 +17,10 @@
     },
     "dateOfBirth": "DateTime",     
     "profilePicture": "String",    
-    "preferences": {               
+    "settings": {               
       "language": "String",
-      "currency": "String"
+      "currency": "String",
+      add other settings here 
     },
     "createdAt": "DateTime",       
     "updatedAt": "DateTime"        

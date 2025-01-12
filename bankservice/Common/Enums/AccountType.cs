@@ -3,8 +3,6 @@
     public enum AccountType
     {
         Saving,
-        Current,
-        Dmate,
-        Shared
+        Current
     }
 }

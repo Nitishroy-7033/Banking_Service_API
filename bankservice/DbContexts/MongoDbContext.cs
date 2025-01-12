@@ -1,58 +1,54 @@
 ﻿using bankservice.Models.Exceptions;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Events;
+using System.Security.Authentication;
 
 namespace bankservice.DbContexts
 {
     public class MongoDbContext<T>
     {
-        private readonly Dictionary<string, string> Collections = new()
-            {
-          
-            };
+        private readonly IMongoDatabase _database;
 
-        private IMongoDatabase Database { get; }
-        public IMongoCollection<T> Collection { get; }
-
-        public MongoDbContext(MongoDbConfigs mongoDbConfigs)
+        public MongoDbContext(IOptions<MongoDbConfigs> mongoDBSettings)
         {
-            MongoClientSettings clientSettings = MongoClientSettings.FromConnectionString(mongoDbConfigs.ConnectionString);
-
-            if (mongoDbConfigs.EnableCommandTracing)
+            var connectionString = mongoDBSettings?.Value.ConnectionString;
+            if (string.IsNullOrEmpty(connectionString))
             {
-                var logger = Serilog.Log.Logger;
-                clientSettings.ClusterConfigurator = builder =>
-                {
-                    builder.Subscribe<CommandStartedEvent>(_ =>
-                    {
-                        logger.Debug($"Mongo Command started: {_.Command}");
-                    });
-                };
+                throw new ArgumentNullException(nameof(connectionString), "MongoDB connection string is missing.");
             }
 
-            var client = new MongoClient(clientSettings);
-            Database = client.GetDatabase(mongoDbConfigs.DatabaseName);
-
-            Collection = Database.GetCollection<T>(GetCollectionName());
-        }
-
-        public string GetCollectionName()
-        {
-            string collName = string.Empty;
             try
             {
-                Type type = typeof(T);
-                collName = Collections[type.Name];
+                var clientSettings = MongoClientSettings.FromConnectionString(connectionString);
+                clientSettings.SslSettings = new SslSettings { EnabledSslProtocols = SslProtocols.Tls12 };
+
+                var client = new MongoClient(clientSettings);
+                _database = client.GetDatabase(mongoDBSettings.Value.DatabaseName);
             }
-            catch
+            catch (TimeoutException ex)
             {
-                // Not required action
+                throw new InvalidOperationException("Connection to MongoDB server timed out.", ex);
             }
-            if (string.IsNullOrWhiteSpace(collName))
+            catch (Exception ex)
             {
-                throw new CustomException("Collection name is empty.", "");
+                throw new InvalidOperationException("An error occurred while connecting to MongoDB.", ex);
             }
-            return collName;
+        }
+
+        public IMongoCollection<T> GetCollection()
+        {
+            var collectionName = Pluralize(typeof(T).Name);
+            return _database.GetCollection<T>(collectionName);
+        }
+
+        private string Pluralize(string name)
+        {
+            if (name.EndsWith("y", StringComparison.OrdinalIgnoreCase))
+            {
+                return name.Substring(0, name.Length - 1) + "ies";
+            }
+            return name + "s";
         }
     }
 }
